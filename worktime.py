@@ -16,6 +16,12 @@ def weekday(x):
         6: "週日"
     }[x]
 
+def format(custom_format, need_center, need_border):
+    center = {'align': 'center', 'valign': 'vcenter'} if need_center else {}
+    border = {'border': 1} if need_border else {}
+    format_result = {**custom_format, **center, **border}
+    return workbook.add_format(format_result)
+
 year = 2018
 month = 1
 num_days = calendar.monthrange(year, month)[1]
@@ -28,13 +34,14 @@ workbook = xlsxwriter.Workbook('demo1.xlsx')
 worksheet = workbook.add_worksheet()
 
 # 4. 定義一個加粗的格式物件
-bold = workbook.add_format({'bold':True})
-bg_color = workbook.add_format({'bg_color': '#C0C0C0'})
+default_format = format({}, True, True)
+bold = format({'bold' : True, 'font_size' : 16}, True, False)
+bg_color = format({'bg_color' : '#C0C0C0'}, True, True)
+text_wrap = format({'text_wrap' : True}, False, True)
 
 # 5. 向單元格寫入資料
 # 5.1 向A1單元格寫入'Hello'
-worksheet.write('A1', '員工編號：',bold)
-worksheet.write('A1', '員工編號：           諸度股份有限公司 工時紀錄   民國 ' + str(year - 1911) + ' 年 ' + str(month) + ' 月份     員工：       ', bold)
+worksheet.merge_range('A1:N1', '員工編號：           諸度股份有限公司 工時紀錄   民國 ' + str(year - 1911) + ' 年 ' + str(month) + ' 月份     員工：       ', bold)
 worksheet.write('A2', '日期', bg_color)
 worksheet.write('B2', '星期', bg_color)
 worksheet.write('C2', '上班', bg_color)
@@ -50,12 +57,21 @@ worksheet.write('L2', '正班時數', bg_color)
 worksheet.write('M2', '加班時數', bg_color)
 worksheet.write('N2', '備註', bg_color)
 
-for index, day in enumerate(days):
-    worksheet.write(("A" if index < 16 else "H") + str(index % 16 + 3), day['day'])
-    worksheet.write(("B" if index < 16 else "H") + str(index % 16 + 3), weekday(day['weekday']))
+for row in range(3, 19):
+    for col in range(ord('A'), ord('N') + 1):
+        worksheet.write(chr(col) + str(row), '', default_format)
 
-worksheet.write('A20', "※每日工作9小時，中午休息一個小時，共為8小時。\n\r※延長工作時數：每日不得超過12小時，每月不得超過46小時。\n\r※出勤紀錄，應逐日記載勞工出勤情形至分鐘為止。依據勞動基準法第 30條規定，應保存五年。")   
-worksheet.write('K20', '簽名')
+for index, day in enumerate(days):
+    if index < 16:
+        worksheet.write("A" + str(index % 16 + 3), day['day'], default_format)
+        worksheet.write("B" + str(index % 16 + 3), weekday(day['weekday']), default_format)
+    else:
+        worksheet.write("H" + str(index % 16 + 3), day['day'], default_format)
+        worksheet.write("I" + str(index % 16 + 3), weekday(day['weekday']), default_format)
+
+worksheet.merge_range('A19:J19', "※每日工作9小時，中午休息一個小時，共為8小時。\n※延長工作時數：每日不得超過12小時，每月不得超過46小時。\n※出勤紀錄，應逐日記載勞工出勤情形至分鐘為止。依據勞動基準法第 30條規定，應保存五年。", text_wrap)   
+worksheet.write('K19', '簽名', default_format)
+worksheet.merge_range('L19:N19', '', default_format)
 
 worksheet.set_default_row(25)
 worksheet.set_row(0, 35)
