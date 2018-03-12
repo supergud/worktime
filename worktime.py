@@ -7,6 +7,7 @@ import sys
 year = int(sys.argv[1])
 month = int(sys.argv[2])
 name = str(sys.argv[3])
+number = str(sys.argv[4])
 filename = str(year) + '-' + str(month).zfill(2) + '-' + name + '.xlsx'
 
 url = "http://data.ntpc.gov.tw/api/v1/rest/datastore/382000000A-000077-002"
@@ -58,7 +59,7 @@ text_wrap = format({'text_wrap' : True}, False, True)
 
 # 5. 向單元格寫入資料
 # 5.1 向A1單元格寫入'Hello'
-worksheet.merge_range('A1:N1', '員工編號：           諸度股份有限公司 工時紀錄   民國 ' + str(year - 1911) + ' 年 ' + str(month) + ' 月份     員工：' + name, bold)
+worksheet.merge_range('A1:N1', '員工編號：' + str(number) + '      諸度股份有限公司 工時紀錄   民國 ' + str(year - 1911) + ' 年 ' + str(month) + ' 月份     員工：' + name, bold)
 worksheet.write('A2', '日期', bg_color)
 worksheet.write('B2', '星期', bg_color)
 worksheet.write('C2', '上班', bg_color)
