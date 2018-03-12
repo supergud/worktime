@@ -4,9 +4,9 @@
 import xlsxwriter, datetime, calendar, requests, json, random
 import sys
 
-year = 2018
-month = 2
-name = '李冠緯'
+year = int(sys.argv[1])
+month = int(sys.argv[2])
+name = str(sys.argv[3])
 filename = str(year) + '-' + str(month).zfill(2) + '-' + name + '.xlsx'
 
 url = "http://data.ntpc.gov.tw/api/v1/rest/datastore/382000000A-000077-002"
@@ -93,7 +93,7 @@ for index, day in enumerate(days):
             start_minute = random.randrange(60)
             end_hour = random.randrange(18, 20)
             end_minute = random.randrange(60)
-            
+
             worksheet.write("C" + num, str(start_hour) + ':' + str(start_minute).zfill(2), default_format)
             worksheet.write("D" + num, str(end_hour) + ':' + str(end_minute).zfill(2), default_format)
             worksheet.write("E" + num, 8, default_format)
@@ -124,7 +124,7 @@ worksheet.merge_range('H18:K18', '小計', default_format)
 worksheet.write("L18", '=SUM(E3:E18, L3:L17)', default_format)
 worksheet.write("M18", '=SUM(F3:F18, M3:M17)', default_format)
 
-worksheet.merge_range('A19:J19', "※每日工作9小時，中午休息一個小時，共為8小時。\n※延長工作時數：每日不得超過12小時，每月不得超過46小時。\n※出勤紀錄，應逐日記載勞工出勤情形至分鐘為止。依據勞動基準法第 30條規定，應保存五年。", text_wrap)   
+worksheet.merge_range('A19:J19', "※每日工作9小時，中午休息一個小時，共為8小時。\n※延長工作時數：每日不得超過12小時，每月不得超過46小時。\n※出勤紀錄，應逐日記載勞工出勤情形至分鐘為止。依據勞動基準法第 30條規定，應保存五年。", text_wrap)
 worksheet.write('K19', '簽名', default_format)
 worksheet.merge_range('L19:N19', '', default_format)
 
