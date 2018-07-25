@@ -90,10 +90,16 @@ for index, day in enumerate(days):
         worksheet.write("A" + num, day['day'], default_format)
         worksheet.write("B" + num, weekday(day['weekday']), default_format)
         if holiday_name is None:
-            start_hour = random.randrange(8, 10)
             start_minute = random.randrange(60)
-            end_hour = random.randrange(18, 20)
+            if start_minute >= 30:
+                start_hour = random.randrange(8, 9)
+            else:
+                start_hour = random.randrange(9, 10)
             end_minute = random.randrange(60)
+            if end_minute >= start_minute:
+                end_hour = start_hour + 9
+            else:
+                end_hour = start_hour + 10
 
             worksheet.write("C" + num, str(start_hour) + ':' + str(start_minute).zfill(2), default_format)
             worksheet.write("D" + num, str(end_hour) + ':' + str(end_minute).zfill(2), default_format)
@@ -107,10 +113,16 @@ for index, day in enumerate(days):
         worksheet.write("H" + num, day['day'], default_format)
         worksheet.write("I" + num, weekday(day['weekday']), default_format)
         if holiday_name is None:
-            start_hour = random.randrange(8, 10)
             start_minute = random.randrange(60)
-            end_hour = random.randrange(18, 20)
+            if start_minute >= 30:
+                start_hour = random.randrange(8, 9)
+            else:
+                start_hour = random.randrange(9, 10)
             end_minute = random.randrange(60)
+            if end_minute >= start_minute:
+                end_hour = start_hour + 9
+            else:
+                end_hour = start_hour + 10
 
             worksheet.write("J" + num, str(start_hour) + ':' + str(start_minute).zfill(2), default_format)
             worksheet.write("K" + num, str(end_hour) + ':' + str(end_minute).zfill(2), default_format)
